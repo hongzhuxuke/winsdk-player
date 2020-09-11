@@ -1,0 +1,3 @@
+[submodule "thirdParty/VHlibCef"]
+	path = thirdParty/VHlibCef
+	url = git@gitlab.vhall.com:vhall_3rdparty/VHlibCef.git
