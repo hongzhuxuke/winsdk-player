@@ -47,9 +47,9 @@ public:
     /*创建WebView成功时的回调。
     *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
     *用户根据返回的id，可操作指定的webview*/
-    virtual void OnHandleCreateWebView(int &id, const char* url);
+    virtual void OnHandleCreateWebView(int id, const char* url);
     /*webview销毁事件通知*/
-    virtual void OnHandleWebViewDestoryed(int &id);
+    virtual void OnHandleWebViewDestoryed(int id);
 
     virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg);
 
@@ -65,7 +65,7 @@ public:
     * 创建并获取一个webview;
     * 参数：hwnd 父窗口句柄
     */
-    virtual int CreateWebView(VHWebEventCb* cb, void* hwnd, int wnd_width, int wnd_height, const std::string url);
+    virtual int CreateWebView(SimpleHandleEvent* cb, void* hwnd, int wnd_width, int wnd_height, const std::string url);
     /**
     * 重新加载url.
     **/
@@ -94,9 +94,9 @@ public:
     virtual void SetProxy(bool enable, const char* proxy_server, const char* proxy_user, const char* proxy_pwd);
 
 private:
-    CefRefPtr<SimpleApp> mApp;
-    VHWebEventCb* mVHWebEventCbPtr;
-    bool bInit;
+
+   SimpleHandleEvent* mVHWebEventCbPtr;
+
     CefRefPtr<SimpleHandler> mHandler = nullptr;
 };
 

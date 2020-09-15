@@ -20,14 +20,14 @@ SimpleHandler* g_instance = NULL;
 
 }  // namespace
 
-SimpleHandler::SimpleHandler(bool use_views)
-    : use_views_(use_views), is_closing_(false) {
-  DCHECK(!g_instance);
-  g_instance = this;
+SimpleHandler::SimpleHandler(bool use_views,  CefString startup_url)
+    : use_views_(use_views), is_closing_(false) , mStartUrl(startup_url){
+  //DCHECK(!g_instance);
+  //g_instance = this;
 }
 
 SimpleHandler::~SimpleHandler() {
-  g_instance = NULL;
+  //g_instance = NULL;
 }
 
 // static
@@ -47,14 +47,14 @@ bool SimpleHandler::OnBeforePluginLoad(const CefString& mime_type,
 }
 
 bool SimpleHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-   //CefRefPtr<CefFrame> frame,
+   CefRefPtr<CefFrame> frame,
    CefProcessId source_process,
    CefRefPtr<CefProcessMessage> message) {
    int id = browser->GetIdentifier();
    const std::string& messageName = message->GetName();
    if (messageName == "JsCallQtMsg" || messageName == "JsCallQtOpenUrl" || messageName == "JsCallQtStartLive" ||
       messageName == "JSCallQtUserOnline" || messageName == "JSCallQtUserOffline" || messageName == "JsCallQtShareTo" ||
-      messageName == "JsCallQtStartVoiceLive" || messageName == "JsCallQtMsg" || messageName == "JsCallFadeOutTip"){
+      messageName == "JsCallQtStartVoiceLive" || messageName == "JsCallFadeOutTip"){
       CefRefPtr<CefListValue> value = message->GetArgumentList();
       if (value->GetSize() > 0) {
          CefString argv = value->GetString(0);

@@ -5,11 +5,10 @@
 #include "include/internal/cef_types.h"
 #include <mutex>
 
-
-
 std::mutex mTaskMutex;
 VHWebViewImpl* globalWebView = nullptr;
-
+CefRefPtr<SimpleApp> gApp = nullptr;
+bool bInit = false;
 #define IMPLEMENT_REFCOUNTING(ClassName)                             \
  public:                                                             \
   void AddRef() const OVERRIDE { ref_count_.AddRef(); }              \
@@ -84,18 +83,16 @@ VHWebViewImpl::VHWebViewImpl()
 
 VHWebViewImpl::~VHWebViewImpl()
 {
-   if (mApp) {
-      mApp->RegisterBrowserEventListener(nullptr);
-      mHandler = SimpleHandler::GetInstance();
-      if (mHandler) {
-         mHandler->RemoveCallbackObj(mApp);
-      }
-
+   if (gApp) {
+      gApp->RegisterBrowserEventListener(nullptr);
+      //mHandler = SimpleHandler::GetInstance();
       //mApp->Release();
       //delete mApp;
       //mApp = nullptr;
    }
-   
+   if (mHandler) {
+      mHandler->RemoveCallbackObj(mVHWebEventCbPtr);
+   }
    //if (mHandler) {
    //   delete mHandler;
    //   mHandler = nullptr;
@@ -147,12 +144,12 @@ int VHWebViewImpl::InitlibCef() {
     // SimpleApp implements application-level callbacks for the browser process.
     // It will create the first browser instance in OnContextInitialized() after
     // CEF has initialized.
-    mApp = new SimpleApp;
-    if (mApp) {
-       mApp->RegisterBrowserEventListener(this);
+    gApp = new SimpleApp;
+    if (gApp) {
+       gApp->RegisterBrowserEventListener(this);
     }
     // Initialize CEF.
-    bool bRet = CefInitialize(main_args, settings, mApp.get(), sandbox_info);
+    bool bRet = CefInitialize(main_args, settings, gApp.get(), sandbox_info);
     bInit = true;
     //// Run the CEF message loop. This will block until CefQuitMessageLoop() is called.
     //CefRunMessageLoop();
@@ -163,15 +160,15 @@ int VHWebViewImpl::InitlibCef() {
     return 0;
 }
 
-void VHWebViewImpl::OnHandleCreateWebView(int &id, const char* url) {
+void VHWebViewImpl::OnHandleCreateWebView(int id, const char* url) {
    if (mVHWebEventCbPtr) {
-      mVHWebEventCbPtr->OnCreateWebView(id, url);
+      mVHWebEventCbPtr->OnHandleCreateWebView(id, url);
    }
 }
 /*webview销毁事件通知*/
-void VHWebViewImpl::OnHandleWebViewDestoryed(int &id) {
+void VHWebViewImpl::OnHandleWebViewDestoryed(int id) {
    if (mVHWebEventCbPtr) {
-      mVHWebEventCbPtr->OnWebViewDestoryed(id);
+      mVHWebEventCbPtr->OnHandleWebViewDestoryed(id);
    }
 }
 
@@ -191,9 +188,9 @@ void VHWebViewImpl::OnTitleChanged(const int id, std::string title_name) {
 * 创建并获取一个webview;
 * 参数：hwnd 父窗口句柄
 */
-int VHWebViewImpl::CreateWebView(VHWebEventCb* cb, void* hwnd, int wnd_width, int wnd_height, const std::string loadUrl) {
+int VHWebViewImpl::CreateWebView(SimpleHandleEvent* cb, void* hwnd, int wnd_width, int wnd_height, const std::string loadUrl) {
     mVHWebEventCbPtr = cb;
-    mHandler = SimpleHandler::GetInstance();
+    mHandler = new SimpleHandler(true, loadUrl);//SimpleHandler::GetInstance();
     // Specify CEF browser settings here.
     CefBrowserSettings browser_settings;
     browser_settings.plugins = STATE_ENABLED;
@@ -213,7 +210,7 @@ int VHWebViewImpl::CreateWebView(VHWebEventCb* cb, void* hwnd, int wnd_width, in
     window_info.SetAsChild(reinterpret_cast<HWND>(hwnd), windowRect);
 
     if (mHandler) {
-       mHandler->RegisterCallbackObj(mApp);
+       mHandler->RegisterCallbackObj(mVHWebEventCbPtr);
     }
 
     //CefRequestContextSettings rcsettings;
@@ -224,11 +221,12 @@ int VHWebViewImpl::CreateWebView(VHWebEventCb* cb, void* hwnd, int wnd_width, in
     //value->SetInt(1);
     //request_content->SetPreference("profile.default_content_setting_values.plugins", value, error);
 
-    CefRefPtr<CefRequestContext> request_context;
+
     CefBrowserHost::CreateBrowser(window_info,
        mHandler,
        url,
        browser_settings,
+       nullptr,
        nullptr);
 
     return 0;
@@ -246,7 +244,7 @@ int VHWebViewImpl::LoadUrl(const int id, const char* url) {
 
 
 void VHWebViewImpl::SetProxy(bool enable, const char* proxy_server, const char* proxy_user, const char* proxy_pwd) {
-   mHandler = SimpleHandler::GetInstance();
+   //mHandler = SimpleHandler::GetInstance();
    if (mHandler) {
       mHandler->SetProxy(enable, proxy_server, proxy_user, proxy_pwd);
    }
@@ -291,8 +289,8 @@ void VHWebViewImpl::CloseWebView(const int id) {
 * 关闭所有WebView
 */
 void VHWebViewImpl::CloseAll() {
-    if (mApp) {
-        mApp->Close();
+    if (gApp) {
+       gApp->Close();
     }
 }
 

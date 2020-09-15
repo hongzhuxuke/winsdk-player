@@ -68,7 +68,7 @@ void SimpleApp::OnContextInitialized() {
   const bool use_views = false;
 
   // SimpleHandler implements browser-level callbacks.
-  mHandler = new SimpleHandler(use_views);
+  //mHandler = new SimpleHandler(use_views);
 
   //// Specify CEF browser settings here.
   //CefBrowserSettings browser_settings;
@@ -136,14 +136,14 @@ void SimpleApp::OnBeforeCommandLineProcessing(
 //   object->SetValue("NativeLogin", func, V8_PROPERTY_ATTRIBUTE_NONE);
 //}
 
-void SimpleApp::OnHandleCreateWebView(int &id, const char* url) {
+void SimpleApp::OnHandleCreateWebView(int id, const char* url) {
    std::unique_lock<std::mutex> lock(mEventCbMutex);
    if (mBrowserEventListenPtr) {
       mBrowserEventListenPtr->OnHandleCreateWebView(id, url);
    }
 }
 /*webview销毁事件通知*/
-void SimpleApp::OnHandleWebViewDestoryed(int &id) {
+void SimpleApp::OnHandleWebViewDestoryed(int id) {
    std::unique_lock<std::mutex> lock(mEventCbMutex);
    if(mBrowserEventListenPtr){
       mBrowserEventListenPtr->OnHandleWebViewDestoryed(id);

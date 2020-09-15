@@ -7,21 +7,27 @@
 
 #include <string>
 #include <windows.h>
+#include "simple_handler_cb.h"
+
+
+
+
 namespace vhall_paas {
 
-    class VHWebEventCb {
-    public:
-        /*创建WebView成功时的回调。
-        *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
-        *用户根据返回的id，可操作指定的webview*/
-        virtual void OnCreateWebView(int id, const char* url) = 0;
-        /*webview销毁事件通知*/       
-        virtual void OnWebViewDestoryed(int id) = 0;
+    //class VHWebEventCb {
+    //public:
+    //    /*创建WebView成功时的回调。
+    //    *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
+    //    *用户根据返回的id，可操作指定的webview*/
+    //    virtual void OnCreateWebView(int id, const char* url) = 0;
+    //    /*webview销毁事件通知*/       
+    //    virtual void OnWebViewDestoryed(int id) = 0;
 
-        virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg) = 0;
+    //    virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg) = 0;
 
-        virtual void OnTitleChanged(const int id, std::string title_name) = 0;
-    };
+    //    virtual void OnTitleChanged(const int id, std::string title_name) = 0;
+    //};
+
 
     class VHWebViewInterface
     {
@@ -39,7 +45,7 @@ namespace vhall_paas {
         * 创建并获取一个webview;
         * 参数：hwnd 父窗口句柄
         */
-        virtual int CreateWebView(VHWebEventCb* cb, void* hwnd, int wnd_width, int wnd_height, const std::string url) = 0;
+        virtual int CreateWebView(SimpleHandleEvent* cb, void* hwnd, int wnd_width, int wnd_height, const std::string url) = 0;
         /**
         * 重新加载url.
         **/

@@ -8,24 +8,19 @@
 #include "include/cef_client.h"
 #include "include/cef_v8.h"
 #include "include/cef_request_context_handler.h"
-
+#include "simple_handler_cb.h"
 #include <list>
 #include <mutex>
+#include "simple_handler_cb.h"
 
 
-class SimpleHandleEvent {
-public:
-    /*创建WebView成功时的回调。
-    *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
-    *用户根据返回的id，可操作指定的webview*/
-    virtual void OnHandleCreateWebView(int &id, const char* url) = 0;
-    /*webview销毁事件通知*/
-    virtual void OnHandleWebViewDestoryed(int &id) = 0;
-
-    virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg) = 0;
-
-    virtual void OnTitleChanged(const int id, std::string title_name) = 0;
-};
+//class SimpleHandleEvent {
+//public:
+//   virtual void OnHandleCreateWebView(int id, const char* url) = 0;
+//   virtual void OnHandleWebViewDestoryed(int id) = 0;
+//   virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg) = 0;
+//   virtual void OnTitleChanged(const int id, std::string title_name) = 0;
+//};
 
 class SimpleHandler : public CefClient,
                       public CefDisplayHandler,
@@ -36,7 +31,7 @@ class SimpleHandler : public CefClient,
                       public CefRequestHandler,
                       public CefRequestContextHandler {
  public:
-  explicit SimpleHandler(bool use_views);
+  explicit SimpleHandler(bool use_views, CefString startup_url);
   ~SimpleHandler();
 
   // Provide access to the single global instance of this object.
@@ -55,10 +50,9 @@ class SimpleHandler : public CefClient,
   virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE { return this; }
 
   virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
-     //CefRefPtr<CefFrame> frame,
+     CefRefPtr<CefFrame> frame,
      CefProcessId source_process,
      CefRefPtr<CefProcessMessage> message) OVERRIDE;
-
 
   virtual bool OnBeforePluginLoad(const CefString& mime_type,
      const CefString& plugin_url,
@@ -67,16 +61,16 @@ class SimpleHandler : public CefClient,
      CefRefPtr<CefWebPluginInfo> plugin_info,
      PluginPolicy* plugin_policy);
 
-  //virtual CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(
-  //   CefRefPtr<CefBrowser> browser,
-  //   CefRefPtr<CefFrame> frame,
-  //   CefRefPtr<CefRequest> request,
-  //   bool is_navigation,
-  //   bool is_download,
-  //   const CefString& request_initiator,
-  //   bool& disable_default_handling) {
-  //   return nullptr;
-  //}
+  virtual CefRefPtr<CefResourceRequestHandler> GetResourceRequestHandler(
+     CefRefPtr<CefBrowser> browser,
+     CefRefPtr<CefFrame> frame,
+     CefRefPtr<CefRequest> request,
+     bool is_navigation,
+     bool is_download,
+     const CefString& request_initiator,
+     bool& disable_default_handling) {
+     return nullptr;
+  }
   ///
   // Called when the browser component is about to loose focus. For instance, if
   // focus was on the last HTML element and the user pressed the TAB key. |next|
@@ -203,6 +197,8 @@ class SimpleHandler : public CefClient,
    CefString mProxyServer;
    CefString mProxyUser;
    CefString mProxyPwd;
+   
+   CefString mStartUrl;
 };
 
 #endif  // CEF_TESTS_CEFSIMPLE_SIMPLE_HANDLER_H_

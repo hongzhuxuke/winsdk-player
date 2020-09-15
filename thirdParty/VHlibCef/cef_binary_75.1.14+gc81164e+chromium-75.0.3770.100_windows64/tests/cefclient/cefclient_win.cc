@@ -27,7 +27,7 @@
 #if defined(CEF_USE_SANDBOX)
 // The cef_sandbox.lib static library may not link successfully with all VS
 // versions.
-#pragma comment(lib, "cef_sandbox.lib")
+//#pragma comment(lib, "cef_sandbox.lib")
 #endif
 
 namespace client {
@@ -44,8 +44,8 @@ int RunMain(HINSTANCE hInstance, int nCmdShow) {
 #if defined(CEF_USE_SANDBOX)
   // Manage the life span of the sandbox information object. This is necessary
   // for sandbox support on Windows. See cef_sandbox_win.h for complete details.
-  CefScopedSandboxInfo scoped_sandbox;
-  sandbox_info = scoped_sandbox.sandbox_info();
+  //CefScopedSandboxInfo scoped_sandbox;
+  //sandbox_info = scoped_sandbox.sandbox_info();
 #endif
 
   // Parse command-line arguments.

@@ -14,9 +14,9 @@ public:
    /*创建WebView成功时的回调。
    *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
    *用户根据返回的id，可操作指定的webview*/
-   virtual void OnHandleCreateWebView(int &id, const char* url) = 0;
+   virtual void OnHandleCreateWebView(int id, const char* url) = 0;
    /*webview销毁事件通知*/
-   virtual void OnHandleWebViewDestoryed(int &id) = 0;
+   virtual void OnHandleWebViewDestoryed(int id) = 0;
    /**消息监听*/
    virtual void OnRecvMsg(const int id, std::string fun_name, std::string msg) = 0;
    /**title 改变 ***/
@@ -51,12 +51,12 @@ public:
     *参数：id 对应创建webview的id, url 创建webview时对应加载的url地址。
     *用户根据返回的id，可操作指定的webview
     */
-   virtual void OnHandleCreateWebView(int &id, const char* url);
+   virtual void OnHandleCreateWebView(int id, const char* url);
    
    /*
    * webview销毁事件通知
    */
-   virtual void OnHandleWebViewDestoryed(int &id);
+   virtual void OnHandleWebViewDestoryed(int id);
 
    /**title 改变 ***/
    virtual void OnTitleChanged(const int id, std::string title_name);
