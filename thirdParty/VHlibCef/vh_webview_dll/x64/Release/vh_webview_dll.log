@@ -1,13 +1,8 @@
 ﻿  simple_app.cc
+e:\workspace\vls\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\simple_handler.h(11): fatal error C1083: 无法打开包括文件: “simple_handler_cb.h”: No such file or directory
   simple_handler.cc
+e:\workspace\vls\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\simple_handler.h(11): fatal error C1083: 无法打开包括文件: “simple_handler_cb.h”: No such file or directory
   simple_handler_win.cc
+e:\workspace\vls\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\simple_handler.h(11): fatal error C1083: 无法打开包括文件: “simple_handler_cb.h”: No such file or directory
   VHWebViewImpl.cpp
-e:\workspace\classclient\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\vhwebviewimpl.cpp(29): warning C4005: “IMPLEMENT_REFCOUNTING”: 宏重定义
-  e:\workspace\classclient\winsdk-player\thirdparty\vhlibcef\cef_binary_3.3578.1860.g36610bd_windows64\include\cef_base.h(142): note: 参见“IMPLEMENT_REFCOUNTING”的前一个定义
-e:\workspace\classclient\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\vhwebviewimpl.cpp(140): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-    正在创建库 E:\workSpace\classClient\x64\Release\vh_webview_dll.lib 和对象 E:\workSpace\classClient\x64\Release\vh_webview_dll.exp
-  正在生成代码
-e:\workspace\classclient\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\simple_handler.cc(329): warning C4715: “SimpleHandler::CloseBrowser”: 不是所有的控件路径都返回值
-  All 788 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  已完成代码的生成
-  vh_webview_dll.vcxproj -> E:\workSpace\classClient\x64\Release\vh_webview_dll.dll
+e:\workspace\vls\winsdk-player\thirdparty\vhlibcef\vh_webview_dll\vhwebview.h(10): fatal error C1083: 无法打开包括文件: “simple_handler_cb.h”: No such file or directory
